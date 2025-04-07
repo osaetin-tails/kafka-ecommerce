@@ -20,7 +20,7 @@ SQLAlchemy==2.0.39
 sqlmodel==0.0.24
 starlette==0.46.1
 structlog==25.2.0
-typing_extensions==4.12.2
+typing_extensions==4.13.1
 uvicorn==0.34.0
 uvloop==0.21.0
 watchfiles==1.0.4
