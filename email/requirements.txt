@@ -16,5 +16,5 @@ structlog==25.2.0
 typing_extensions==4.13.2
 uvicorn==0.34.0
 uvloop==0.21.0
-watchfiles==1.0.4
+watchfiles==1.0.5
 websockets==15.0.1
