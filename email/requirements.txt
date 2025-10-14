@@ -6,7 +6,7 @@ fastapi==0.119.0
 h11==0.16.0
 httptools==0.6.4
 idna==3.11
-pydantic==2.11.10
+pydantic==2.12.2
 pydantic_core==2.41.1
 python-dotenv==1.1.1
 PyYAML==6.0.3
