@@ -11,7 +11,7 @@ httptools==0.6.4
 idna==3.10
 pycparser==2.23
 pydantic==2.11.10
-pydantic_core==2.40.1
+pydantic_core==2.41.1
 PyMySQL==1.1.2
 python-dotenv==1.1.1
 PyYAML==6.0.3
