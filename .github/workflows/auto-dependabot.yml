@@ -1,0 +1,86 @@
+name: Dependabot auto-merge
+on:
+  pull_request_target:
+
+  workflow_call:
+    inputs:
+      user:
+        type: string
+        description: "The user triggering the workflow"
+        required: true
+      pr_url:
+        type: string
+        description: "URL for the PR to auto-approve"
+        required: true
+      major:
+        type: boolean
+        description: "If true, major version updates will be auto-approved"
+        required: false
+        default: false
+      minor:
+        type: boolean
+        description: "If true, minor version updates will be auto-approved"
+        required: false
+        default: true
+      patch:
+        type: boolean
+        description: "If true, patch version updates will be auto-approved"
+        required: false
+        default: true
+      automerge:
+        type: boolean
+        description: "If true, auto-merge will be enabled for the PR"
+        required: false
+        default: true
+
+# Do not auto-approve, by default.
+env:
+  AUTO_APPROVE: false
+
+permissions:
+  pull-requests: write
+  contents: write
+
+jobs:
+  dependabot:
+    runs-on: runner-amd64-lite
+    if: ${{ github.event.pull_request.user.login == 'dependabot[bot]' }}
+    steps:
+      - name: Dependabot metadata
+        id: dependabot-metadata
+        uses: dependabot/fetch-metadata@v2
+
+      - uses: actions/checkout@v6
+
+      - name: Check major version updates
+        if: ${{ inputs.major == true && steps.dependabot-metadata.outputs.update-type == 'version-update:semver-major' }}
+        run: |
+          echo "AUTO_APPROVE=true" >> $GITHUB_ENV
+
+      - name: Check minor version updates
+        if: ${{ inputs.minor == true && steps.dependabot-metadata.outputs.update-type == 'version-update:semver-minor' }}
+        run: |
+          echo "AUTO_APPROVE=true" >> $GITHUB_ENV
+
+      - name: Check patch version updates
+        if: ${{ inputs.patch == true && steps.dependabot-metadata.outputs.update-type == 'version-update:semver-patch' }}
+        run: |
+          echo "AUTO_APPROVE=true" >> $GITHUB_ENV
+
+      - name: Enable auto-merge on PR
+        if: ${{ inputs.automerge == true }}
+        run: |
+          gh pr merge --auto --merge "$PR_URL"
+        env:
+          PR_URL: ${{ github.event.pull_request.html_url }}
+
+      - name: Approve a PR if not already approved
+        if: ${{ env.AUTO_APPROVE == 'true' }}
+        run: |
+          gh pr checkout "$PR_URL" # sets the upstream metadata for `gh pr status`
+          if [ "$(gh pr status --json reviewDecision -q .currentBranch.reviewDecision)" != "APPROVED" ];
+          then gh pr review --approve "$PR_URL"
+          else echo "PR already approved, skipping additional approvals to minimize emails/notification noise.";
+          fi
+        env:
+          PR_URL: ${{ github.event.pull_request.html_url }}
