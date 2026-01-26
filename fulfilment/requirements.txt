@@ -9,7 +9,7 @@ fastapi==0.128.0
 h11==0.16.0
 httptools==0.7.1
 idna==3.11
-pycparser==2.23
+pycparser==3.0
 pydantic==2.12.5
 pydantic_core==2.41.5
 PyMySQL==1.1.2
