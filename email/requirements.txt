@@ -1,6 +1,6 @@
 annotated-types==0.7.0
 anyio==4.14.0
-click==8.4.1
+click==8.4.2
 confluent-kafka==2.14.2
 fastapi==0.139.0
 h11==0.16.0
